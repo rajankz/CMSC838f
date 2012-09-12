@@ -50,7 +50,7 @@
 
 			window.onload = function() {
 				if (window.DeviceMotionEvent) {
-					ndow.addEventListener('devicemotion', deviceMotionHandler, false);
+					window.addEventListener('devicemotion', deviceMotionHandler, false);
 				} else {
 					document.getElementById("dmEvent").innerHTML = "Not supported on your device."
 				}
