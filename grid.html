@@ -23,18 +23,13 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		-->
 
-		<!-- This script prevents links from opening in Mobile Safari. https://gist.github.com/1042026 -->
-		<!--
-		<script>(function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d=d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone")</script>
-		-->
 
 		<link rel="stylesheet" href="css/normalize.css">
 		<link rel="stylesheet" href="css/main.css">
-		<script src="js/vendor/modernizr-2.6.1.min.js"></script>
-		<style>
+		
+		<style type="text/css">
 			body {
 				margin: 0px;
-				padding: 0px;
 				height: 100%;
 				width: 100%;
 				top:0px;
@@ -44,11 +39,16 @@
 			#main {
 				border: 1px solid #9C9898;
 			}
-			
-			imgLogo
+			#ball {
+				position:absolute;
+				top: 30px;
+				left: 30px;
+			}
+
 		</style>
 
 		<script src="js/kinetic-v4.0.0.js"></script>
+		<script src="js/vendor/modernizr-2.6.1.min.js"></script>
 		<script>
 			/**
 			 * This came from a page on phone tilt
@@ -58,6 +58,7 @@
 			window.onload = function() {
 				if (window.DeviceMotionEvent) {
 					window.addEventListener('devicemotion', deviceMotionHandler, false);
+					//window.addEventListener('devicemotion', handleAccelUpdate, false);
 				} else {
 					document.getElementById("dmEvent").innerHTML = "Not supported on your device."
 				}
@@ -78,7 +79,11 @@
 				if (acceleration.z > 0) {
 					facingUp = +1;
 				}
+				
+				var currX = parseInt(document.getElementById('ball').style.top);
+				var currY = parseInt(document.getElementById('ball').style.left);
 
+				
 				// Convert the value from acceleration to degrees acceleration.x|y is the
 				// acceleration according to gravity, we'll assume we're on Earth and divide
 				// by 9.81 (earth gravity) to get a percentage value, and then multiply that
@@ -93,8 +98,13 @@
 
 				// Apply the 2D rotation and 3D rotation to the image
 				var rotation = "rotate(" + tiltLR + "deg) rotate3d(1,0,0, " + (tiltFB) + "deg)";
-				document.getElementById("imgLogo").style.webkitTransform = rotation;
+				
+				
+				document.getElementById("ball").style.top = currX+20+" px";
+				document.getElementById("ball").style.left = currY+20+" px";
 			}
+
+
 
 		</script>
 	</head>
@@ -122,7 +132,7 @@
 		</div>
 
 		<div class="container" style="-webkit-perspective: 300; perspective: 300;">
-			<img src="img/ball.gif" id="imgLogo" class="logo">
+			<img src="img/ball.gif" id="ball" class="logo">
 		</div>
 
 	</body>
