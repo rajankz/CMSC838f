@@ -1,139 +1,130 @@
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]>    <html class="no-js iem7"> <![endif]-->
-<!--[if (gt IEMobile 7)|!(IEMobile)]><!-->
-<html class="no-js">
-	<!--<![endif]-->
+<html>
 	<head>
-		<meta charset="utf-8">
 		<meta name="description" content="">
-		<meta name="HandheldFriendly" content="True">
-		<meta name="MobileOptimized" content="320">
-		<meta name="viewport" content="width=device-width">
-		<meta http-equiv="cleartype" content="on">
-
-		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/touch/apple-touch-icon-144x144-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/touch/apple-touch-icon-114x114-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/touch/apple-touch-icon-72x72-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" href="img/touch/apple-touch-icon-57x57-precomposed.png">
-		<link rel="shortcut icon" href="img/touch/apple-touch-icon.png">
-
-		<!-- For iOS web apps. Delete if not needed. https://github.com/h5bp/mobile-boilerplate/issues/94 -->
-		<!--
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		-->
-
-
-		<link rel="stylesheet" href="css/normalize.css">
-		<link rel="stylesheet" href="css/main.css">
-		
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="viewport" 
+          content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <meta http-equiv="cleartype" content="on">
 		<style type="text/css">
 			body {
-				margin: 0px;
-				height: 100%;
-				width: 100%;
-				top:0px;
-				left:0px;
-				position: absolute;
+				margin:auto;
+				padding:0;
+				width:100%;
+				height:100%;
 			}
+			
+			#canvas {
+				border:1px solid #333;
+				margin:auto;
+				float:left;
+				width:100%;
+				height:100%;
+			}
+			
+			#startDiv {
+				position: absolute;
+				left: 0px;
+				bottom: 0px;
+				width: 100%;
+				height: 10%;
+				background-color: #0C3;
+				border: solid #000000 2px;
+			}
+			
 			#main {
 				border: 1px solid #9C9898;
-			}
-			#ball {
+				width:100%;
+				height:100%;
 				position:absolute;
-				top: 30px;
-				left: 30px;
 			}
-
+			
 		</style>
 
 		<script src="js/kinetic-v4.0.0.js"></script>
 		<script src="js/vendor/modernizr-2.6.1.min.js"></script>
+		
 		<script>
-			/**
-			 * This came from a page on phone tilt
-			 * http://www.html5rocks.com/en/tutorials/device/orientation/
-			 */
-
-			window.onload = function() {
-				if (window.DeviceMotionEvent) {
-					window.addEventListener('devicemotion', deviceMotionHandler, false);
-					//window.addEventListener('devicemotion', handleAccelUpdate, false);
-				} else {
-					document.getElementById("dmEvent").innerHTML = "Not supported on your device."
-				}
+			
+			var radius = 10;
+			var canvas = document.getElementById('canvas');
+			var context = canvas.getContext("2d");
+			var centerX = canvas.width / 2;
+			var centerY = canvas.height /2 ;//- radius - 10 ;
+			var boundryX=350;var boundryY=450;
+			var moveX=0, moveY=0;
+			var debug = document.getElementById('debug');
+			
+			function main() {
+				drawCircle(centerX, centerY);
+				if (window.DeviceOrientationEvent) {
+					window.addEventListener('deviceorientation', function(eventData) {
+						var LR = eventData.gamma;
+				    	var FB = eventData.beta;
+				    	var DIR = eventData.alpha;
+				    	deviceOrientationHandler(LR, FB, DIR);
+				    }, false);
+				} 
+				else if (window.OrientationEvent) {
+					window.addEventListener('MozOrientation', mozDevOrientHandler, false);
+				}  
 			}
-			/**
-			 * This came from a page on phone tilt
-			 * http://www.html5rocks.com/en/tutorials/device/orientation/
-			 */
-			function deviceMotionHandler(eventData) {
-				// Grab the acceleration including gravity from the results
-				var acceleration = eventData.accelerationIncludingGravity;
-
-				// Display the raw acceleration data
-				var rawAcceleration = "[" + Math.round(acceleration.x) + ", " + Math.round(acceleration.y) + ", " + Math.round(acceleration.z) + "]";
-
-				// Z is the acceleration in the Z axis, and if the device is facing up or down
-				var facingUp = -1;
-				if (acceleration.z > 0) {
-					facingUp = +1;
-				}
-				
-				var currX = parseInt(document.getElementById('ball').style.top);
-				var currY = parseInt(document.getElementById('ball').style.left);
-
-				
-				// Convert the value from acceleration to degrees acceleration.x|y is the
-				// acceleration according to gravity, we'll assume we're on Earth and divide
-				// by 9.81 (earth gravity) to get a percentage value, and then multiply that
-				// by 90 to convert to degrees.
-				var tiltLR = Math.round(((acceleration.x) / 9.81) * -90);
-				var tiltFB = Math.round(((acceleration.y + 9.81) / 9.81) * 90 * facingUp);
-
-				// Display the acceleration and calculated values
-				document.getElementById("moAccel").innerHTML = rawAcceleration;
-				document.getElementById("moCalcTiltLR").innerHTML = tiltLR;
-				document.getElementById("moCalcTiltFB").innerHTML = tiltFB;
-
-				// Apply the 2D rotation and 3D rotation to the image
-				var rotation = "rotate(" + tiltLR + "deg) rotate3d(1,0,0, " + (tiltFB) + "deg)";
-				
-				
-				document.getElementById("ball").style.top = currX+20+" px";
-				document.getElementById("ball").style.left = currY+20+" px";
+			
+			function deviceOrientationHandler(LR, FB, DIR) {
+				moveX = Math.round(LR);// - moveX;
+				moveY = Math.round(FB);// - moveY;
+				//debug.innerHTML = "x="+Math.round(moveX)+" y="+Math.round(moveY);	
+				moveBall(moveX,moveY);
 			}
-
-
-
+			
+			function moveBall(moveX,moveY){  
+				//context.save();
+				moveX=moveX/20;
+				moveY=moveY/20;
+				
+				//debug.innerHTML = "x="+Math.round(moveX)+" y="+Math.round(moveY);	
+				var newX=centerX+moveX;
+				var newY=centerY+moveY;
+				
+				//debug.innerHTML = "x="+Math.round(newX)+" y="+Math.round(newY);
+				if(newX-radius < 0) 
+					newX=radius;
+				if(newX+radius > boundryX) 
+					newX=boundryX-radius;
+				if(newY-radius < 0) 
+					newY=radius;
+				if(newY+radius > boundryY) 
+					newY=boundryY-radius;
+				
+				debug.innerHTML = "x="+Math.round(newX)+" y="+Math.round(newY);
+		        drawCircle(newX, newY);
+		        //context.restore();
+			}
+			
+			function drawCircle(x, y){
+				context.clearRect ( 0 , 0 , boundryX , boundryY );
+				context.beginPath();
+				//context.moveTo(centerX, centerY);
+				centerX=x;
+				centerY=y;
+		        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+		        context.fillStyle = "#8ED6FF";
+		        context.fill();
+		        context.lineWidth = 1;
+		        context.strokeStyle = "#0080c9";
+		        context.stroke();
+			}
+				
 		</script>
 	</head>
-	<body onmousedown="return false;">
-		<div class="main">
-			<h2>Device Motion</h2>
-			<table>
-				<tr>
-					<td>Event Supported</td>
-					<td id="dmEvent"></td>
-				</tr>
-				<tr>
-					<td>accelerationIncludingGravity</td>
-					<td id="moAccel"></td>
-				</tr>
-				<tr>
-					<td>Calculated Left-Right Tilt</td>
-					<td id="moCalcTiltLR"></td>
-				</tr>
-				<tr>
-					<td>Calculated Front-Back Tilt</td>
-					<td id="moCalcTiltFB"></td>
-				</tr>
-			</table>
-		</div>
-
-		<div class="container" style="-webkit-perspective: 300; perspective: 300;">
-			<img src="img/ball.gif" id="ball" class="logo">
-		</div>
+	<body onmousedown="return false;" onLoad="main()">
+        <div id="main">
+            <canvas id="canvas"></canvas>
+            
+            <div id="debug"></div>
+            
+        	
+    </div>
 
 	</body>
 </html>
