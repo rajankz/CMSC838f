@@ -1,0 +1,98 @@
+<html>
+<head>
+
+<meta name="description" content="">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="viewport" 
+          content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <meta http-equiv="cleartype" content="on">
+        
+        
+	<style>
+	body{margin:auto;padding:0;width:100%;height:100%}
+	#c{border:1px solid #333;margin:auto;float:left;}
+	</style>
+</head>
+<body onload="init();">
+	<canvas id="c" height="450" width="350"></canvas>
+	<div id="debug"></div>
+	<script type="text/javascript">
+	
+	var radius = 10;
+	var canvas = document.getElementById('c');
+	var context = canvas.getContext("2d");
+	var centerX = canvas.width / 2;
+	var centerY = canvas.height /2 ;//- radius - 10 ;
+	var boundryX=350;var boundryY=450;
+	var moveX=0, moveY=0;
+	var debug = document.getElementById('debug');
+	
+	function init() {		
+		
+     drawCircle(centerX, centerY);   
+      if (window.DeviceOrientationEvent) {
+		window.addEventListener('deviceorientation', function(eventData) {
+        var LR = eventData.gamma;
+        var FB = eventData.beta;
+        var DIR = eventData.alpha;
+        deviceOrientationHandler(LR, FB, DIR);
+    }, false);
+		} else if (window.OrientationEvent) {
+		window.addEventListener('MozOrientation', mozDevOrientHandler, false);
+	}  
+	}
+	
+	function deviceOrientationHandler(LR, FB, DIR) {
+		moveX = Math.round(LR);// - moveX;
+		moveY = Math.round(FB);// - moveY;
+		//debug.innerHTML = "x="+Math.round(moveX)+" y="+Math.round(moveY);	
+		moveBall(moveX,moveY);
+	}
+	/*
+	function deviceMotionHandler(eventData){
+		var acceleration = eventData.accelerationIncludingGravity;
+		var rawAcceleration = "[" + Math.round(acceleration.x) + ", " + Math.round(acceleration.y) + ", " + Math.round(acceleration.z) + "]";
+		
+		//debug.innerHTML = rawAcceleration;
+		
+		var moveX = Math.round(acceleration.x)
+		var moveY = Math.round(acceleration.y)
+		debug.innerHTML = "x="+Math.round(moveX)+" y="+Math.round(moveY);	
+		moveBall(moveX,moveY);
+	}
+	*/
+	function moveBall(moveX,moveY){  
+		//context.save();
+		moveX=moveX/20;
+		moveY=moveY/20;
+		//debug.innerHTML = "x="+Math.round(moveX)+" y="+Math.round(moveY);	
+		var newX=centerX+moveX;
+		var newY=centerY+moveY;
+		//debug.innerHTML = "x="+Math.round(newX)+" y="+Math.round(newY);
+		if(newX-radius < 0) newX=radius;
+		if(newX+radius > boundryX) newX=boundryX-radius;
+		if(newY-radius < 0) newY=radius;
+		if(newY+radius > boundryY) newY=boundryY-radius;
+		debug.innerHTML = "x="+Math.round(newX)+" y="+Math.round(newY);
+        drawCircle(newX, newY);
+        //context.restore();
+	}
+	
+	function drawCircle(x, y){
+		context.clearRect ( 0 , 0 , boundryX , boundryY );
+		context.beginPath();
+		//context.moveTo(centerX, centerY);
+		centerX=x;
+		centerY=y;
+        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+        context.fillStyle = "#8ED6FF";
+        context.fill();
+        context.lineWidth = 1;
+        context.strokeStyle = "#0080c9";
+        context.stroke();
+	}
+	
+	</script>
+</body>
+</html>
