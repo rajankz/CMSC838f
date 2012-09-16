@@ -128,17 +128,7 @@
 				//checkCollisions();
 				//moveBlocker(blockerArray);
 		        
-		        
-				
-				//debug.innerHTML = "x="+Math.round(newX)+" y="+Math.round(newY);
-		        
 			}
-			
-			//function checkCollisions() {
-				//for (var i = 0; i < blockerArray.length; i++) {
-					
-				//}
-			//}
 			
 			function crash(){
 				debug.innerHTML = "death";
@@ -155,6 +145,15 @@
 					if (blockerArray[i].x - 0) {
 						
 					}
+				}
+			}
+			
+			function canMoveBlocker(i) {
+				if (blockerArray[i].dir == -1 && (blockerArray[i].x - blockSize / 4) < 0) {
+					blockerArray[i].dir = 1;
+				}
+				if (blockerArray[i].dir == 1 && (blockerArray[i].x + blockSize + (blockSize / 4)) > boundaryX) {
+					blockerArray[i].dir = -1;
 				}
 			}
 			
@@ -180,32 +179,30 @@
 			
 		        //drawBlocker(blockerArray);
 			}
-			/*
+			
 			function moveBlocker(blockerArray) {
-				//for (var i = 0; i < blockerArray.length; i++) {
+				for (var i = 0; i < blockerArray.length; i++) {
+					// Check Collisions to see if blockers pushed the ball (blocker boundaries are less than the circlex+radius)
+					canMoveBlocker(i);
 					// Update each blocker position
-				//}
-				// Check Collisions to see if blockers pushed the ball (blocker boundaries are less than the circlex+radius)
-				checkCollisions();
+					blockerArray[i].x = (blockerArray[i].x + (blockSize / 4)) * blockerArray[i].dir;
+				}
 			}
 			
 			function drawBlocker(blockerArray) {
-				context.clearRect ( 0 , 0 , boundryX , boundryY );
 				for (var i = 0; i < blockerArray.length; i++) {
 					
-			        context.fillRect(blockerArray[i].x, blockerArray[i].y, 10, 10);
-			        context.fillStyle = "#8ED6FF";
+			        context.fillRect(blockerArray[i].x, blockerArray[i].y, blockSize, blockSize);
+			        context.fillStyle = "#880000";
 			        context.fill();
 			        context.lineWidth = 1;
-			        context.strokeStyle = "#0080c9";
+			        context.strokeStyle = "#990000";
 			        context.stroke();
 					
 				}
 			}
 			
-			}
 			
-			*/
 				
 		</script>
             
