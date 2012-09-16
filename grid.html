@@ -125,8 +125,11 @@
 			}
 			
 			function canMoveBall(x, y) {
+				// Run through all blockers and check collisions
 				for (var j = 0; j < blockerArray.length; j++) {
+					// Check blocker y pos against ball y pos
 					if ((y - radius <= (blockerArray[j].y + blockSize)) && (y - radius >= blockerArray[j].y)) { 
+						// Check blocker y pos against ball x pos
 						if (((x - radius <= (blockerArray[j].x + blockSize)) && (x - radius >= blockerArray[j].x)) ||
 						   ((x + radius <= (blockerArray[j].x + blockSize)) && (x + radius >= blockerArray[j].x))) { 
 						   	
@@ -134,8 +137,9 @@
 						}
 					}
 					
+					// Check blocker y pos against ball y pos
 					if ((y + radius <= (blockerArray[j].y + blockSize)) && (y + radius >= blockerArray[j].y)) { 
-						
+						// Check blocker y pos against ball x pos
 						if (((x - radius <= (blockerArray[j].x + blockSize)) && (x - radius >= blockerArray[j].x)) || 
 						   ((x + radius <= (blockerArray[j].x + blockSize)) && (x + radius >= blockerArray[j].x))) {
 						   	
