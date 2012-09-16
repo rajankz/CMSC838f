@@ -46,7 +46,7 @@
 			
 			var boundryX = canvas.width;
 			var boundryY = canvas.height;
-			
+
 			var blockSize = 20;
 			
 			var newX=0, newY=0;
@@ -59,6 +59,18 @@
 			function init() {
 				drawCircle(startX, startY);
 				drawBlockers();
+
+			var death = false;
+			
+			var newX=0, newY=0;
+			
+			//var blockerArray = new Array();
+			//blockerArray = [{"x":10, "y":10, "dir":1}, {"x":50, "y":10, "dir":-1}, {"x":50, "y":10, "dir":1}, {"x":50, "y":50, "dir":-1}];
+			
+			var moveX = 0, moveY = 0;
+			
+			function main() {
+				drawCircle(startX, startY);
 				if (window.DeviceOrientationEvent) {
 					window.addEventListener('deviceorientation', function(eventData) {
 						var LR = eventData.gamma;
@@ -112,25 +124,38 @@
 				drawCircle(newX, newY);
 		        
 		        
+				//check boundaries for each blocker
+				//checkCollisions();
+				//moveBlocker(blockerArray);
+		        
+		        
+				
+				//debug.innerHTML = "x="+Math.round(newX)+" y="+Math.round(newY);
+		        
 			}
 			
-			function canMoveBall(x, y) {
-				for (var i = 0; i < blockerArray.length; i++) {
-					if (blockerArray[i].x -) {
-						
-					}
-				}
-			}
+			//function checkCollisions() {
+				//for (var i = 0; i < blockerArray.length; i++) {
+					
+				//}
+			//}
 			
 			function crash(){
 				debug.innerHTML = "death";
 				// Check if ball hit a side or top --> reset and run main()
-				//context.clearRect ( 0 , 0 , boundryX , boundryY );
-				newX = startX;
-				newY = startY;
+				context.clearRect ( 0 , 0 , boundryX , boundryY );
+				//newX = startX;
+				//newY = startY;
 				//context.beginPath();
-				//drawCircle(startX, startY);
 				redrawCanvas();
+			}
+			
+			function canMoveBall(x, y) {
+				for (var i = 0; i < blockerArray.length; i++) {
+					if (blockerArray[i].x - 0) {
+						
+					}
+				}
 			}
 			
 			function redrawCanvas(){
@@ -153,6 +178,9 @@
 		        drawBlocker(blockerArray);
 			}
 			
+		        //drawBlocker(blockerArray);
+			}
+			/*
 			function moveBlocker(blockerArray) {
 				//for (var i = 0; i < blockerArray.length; i++) {
 					// Update each blocker position
@@ -175,6 +203,9 @@
 				}
 			}
 			
+			}
+			
+			*/
 				
 		</script>
             

@@ -8,19 +8,24 @@
           content="width=device-width, initial-scale=1.0, user-scalable=no">
         <meta http-equiv="cleartype" content="on">
         
-        
+    <script type="text/javascript" src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>    
 	<style>
-	body{margin:auto;padding:0;width:100%;height:100%}
-	#c{border:1px solid #333;margin:auto;float:left;}
+	*{margin:0;padding:0;}
+	html,body{height:100%}
+	#c{position:absolute;top:0px;left:0px;}
 	</style>
 </head>
 <body onload="init();">
-	<canvas id="c" height="450" width="350"></canvas>
+<div style="height: 100%;width: 100%;;">
+	<canvas id="c" width="350" height="450"></canvas>
+</div>
 	<div id="debug"></div>
 	<script type="text/javascript">
 	
 	var radius = 10;
 	var canvas = document.getElementById('c');
+	//canvas.width = $(window).width();
+	//canvas.height = $(window).height();
 	var context = canvas.getContext("2d");
 	var centerX = canvas.width / 2;
 	var centerY = canvas.height /2 ;//- radius - 10 ;
@@ -28,9 +33,10 @@
 	var moveX=0, moveY=0;
 	var debug = document.getElementById('debug');
 	
+	
 	function init() {		
 		
-     drawCircle(centerX, centerY);   
+     //drawCircle(centerX, centerY);   
       if (window.DeviceOrientationEvent) {
 		window.addEventListener('deviceorientation', function(eventData) {
         var LR = eventData.gamma;
@@ -78,6 +84,7 @@
         drawCircle(newX, newY);
         //context.restore();
 	}
+	
 	
 	function drawCircle(x, y){
 		context.clearRect ( 0 , 0 , boundryX , boundryY );
