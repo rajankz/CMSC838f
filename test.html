@@ -12,13 +12,12 @@
 	<style>
 	*{margin:0;padding:0;}
 	html,body{height:100%}
-	#c{position:absolute;top:0px;left:0px;border: 1px solid yellow;
-	}
+	#c{position:absolute;top:0px;left:0px;}
 	</style>
 </head>
 <body onload="init();">
 <div style="height: 100%;width: 100%;;">
-	<canvas id="c"></canvas>
+	<canvas id="c" width="350" height="450"></canvas>
 </div>
 	<div id="debug"></div>
 	<script type="text/javascript">
@@ -37,7 +36,7 @@
 	
 	function init() {		
 		
-     drawCircle(centerX, centerY);   
+     //drawCircle(centerX, centerY);   
       if (window.DeviceOrientationEvent) {
 		window.addEventListener('deviceorientation', function(eventData) {
         var LR = eventData.gamma;
@@ -85,6 +84,7 @@
         drawCircle(newX, newY);
         //context.restore();
 	}
+	
 	
 	function drawCircle(x, y){
 		context.clearRect ( 0 , 0 , boundryX , boundryY );
