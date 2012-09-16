@@ -53,7 +53,15 @@
 			var moveX = 0, moveY = 0;
 			
 			var blockerArray = new Array();
-			blockerArray = [{"x":10, "y":10, "dir":1}, {"x":50, "y":10, "dir":-1}, {"x":50, "y":10, "dir":1}, {"x":50, "y":50, "dir":-1}];
+			blockerArray = [
+			{"x":0, "y":50, "dir":1},
+			{"x":(blockSize * 4), "y":50, "dir":1}, 
+			{"x":(boundaryX - blockSize), "y":100, "dir":-1}, 
+			{"x":(boundaryX - (blockSize * 5)), "y":100, "dir":-1}, 
+			{"x":0, "y":150, "dir":1}, 
+			{"x":(blockSize * 4), "y":150, "dir":1}, 
+			{"x":(boundaryX - blockSize), "y":200, "dir":-1},
+			{"x":(boundaryX - (blockSize * 5)), "y":200, "dir":-1}];
 			
 			function init() {
 				drawCircle(startX, startY);
@@ -69,7 +77,7 @@
 				else if (window.OrientationEvent) {
 					window.addEventListener('MozOrientation', mozDevOrientHandler, false);
 				}  
-				setInterval(function(){moveBlockers(blockerArray)}, 500);
+				setInterval(function(){moveBlockers(blockerArray)}, 100);
 			}
 			
 			function deviceOrientationHandler(LR, FB, DIR) {
@@ -100,34 +108,30 @@
 				//check boundaries for each blocker
 				canMoveBall(newX, newY);
 				
-				//moveBlocker(blockerArray);
-				//drawCircle(newX, newY);
 				redrawCanvas();
-		        
-		        
-				//check boundaries for each blocker
-				//checkCollisions();
-				//moveBlocker(blockerArray);
+				debug.innerHTML = "got past redraw";
 		        
 			}
 			
 			function crash(){
 				debug.innerHTML = "death";
+				
 				// Check if ball hit a side or top --> reset and run main()
-				//context.clearRect ( 0 , 0 , boundaryX , boundaryY );
 				newX = startX;
 				newY = startY;
+				
 				//context.beginPath();
 				redrawCanvas();
 			}
 			
 			function canMoveBall(x, y) {
-				/*for (var i = 0; i < blockerArray.length; i++) {
-					if (blockerArray[i].x - 0) {
-						
-					}
+				for (var j = 0; j < blockerArray.length; j++) {
+					if ((y - radius >= blockerArray[j].x) && (y - radius <= (blockerArray[j].x + blockSize))) { crash(); }
+					if ((y + radius >= blockerArray[j].x) && (y + radius <= (blockerArray[j].x + blockSize))) { crash(); }
+					if ((x - radius >= blockerArray[j].y) && (x - radius <= (blockerArray[j].y - blockSize))) { crash(); }
+					if ((x + radius >= blockerArray[j].y) && (x + radius <= (blockerArray[j].y - blockSize))) { crash(); }
 				}
-				*/
+				
 			}
 			
 			function canMoveBlocker(i) {
@@ -149,8 +153,8 @@
 				context.beginPath();
 				centerX = x;
 				centerY = y;
-		        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
 		        context.fillStyle = "#8ED6FF";
+		        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
 		        context.fill();
 		        context.lineWidth = 1;
 		        context.strokeStyle = "#0080c9";
@@ -169,8 +173,8 @@
 			function drawBlockers(blockerArray) {
 				for (var i = 0; i < blockerArray.length; i++) {
 					context.beginPath();
-			        context.fillRect(blockerArray[i].x, blockerArray[i].y, blockSize, blockSize);
 			        context.fillStyle = "#880000";
+			        context.fillRect(blockerArray[i].x, blockerArray[i].y, blockSize, blockSize);
 			        context.fill();
 			        context.lineWidth = 1;
 			        context.strokeStyle = "#990000";
@@ -179,9 +183,6 @@
 				}
 			}
 			
-			
-				
 		</script>
-            
 	</body>
 </html>
