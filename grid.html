@@ -38,16 +38,24 @@
 			
 			var context = canvas.getContext("2d");
 			
+			var startX = canvas.width / 2;
+			var startY = canvas.height - radius;
+			
 			var centerX = canvas.width / 2;
-			var centerY = canvas.height / 2;
+			var centerY = canvas.height - radius;
 			
 			var boundryX = canvas.width;
 			var boundryY = canvas.height;
 			
+			var death = false;
+			
+			var blockerArray = new Array();
+			blockerArray = [{"x":10, "y":10, "dir":1}, {"x":50, "y":10, "dir":-1}, {"x":50, "y":10, "dir":1}, {"x":50, "y":50, "dir":-1}];
+			
 			var moveX = 0, moveY = 0;
 			
 			function main() {
-				drawCircle(centerX, centerY);
+				drawCircle(startX, startY);
 				if (window.DeviceOrientationEvent) {
 					window.addEventListener('deviceorientation', function(eventData) {
 						var LR = eventData.gamma;
@@ -62,48 +70,90 @@
 			}
 			
 			function deviceOrientationHandler(LR, FB, DIR) {
+				// Set x and y move amounts
 				moveX = Math.round(LR);// - moveX;
 				moveY = Math.round(FB);// - moveY;
-				//debug.innerHTML = "x="+Math.round(moveX)+" y="+Math.round(moveY);	
+				
+				// run moveBall() to update ball center x and y
 				moveBall(moveX,moveY);
 			}
 			
 			function moveBall(moveX,moveY){  
-				//context.save();
-				moveX=moveX/20;
-				moveY=moveY/20;
+				// Calculate the ball move
+				moveX = moveX / 20;
+				moveY = moveY / 20;
 				
-				//debug.innerHTML = "x="+Math.round(moveX)+" y="+Math.round(moveY);	
-				var newX=centerX+moveX;
-				var newY=centerY+moveY;
+				// Make new center points	
+				var newX = centerX + moveX;
+				var newY = centerY + moveY;
 				
-				//debug.innerHTML = "x="+Math.round(newX)+" y="+Math.round(newY);
-				if(newX-radius < 0) 
-					newX=radius;
-				if(newX+radius > boundryX) 
-					newX=boundryX-radius;
-				if(newY-radius < 0) 
-					newY=radius;
-				if(newY+radius > boundryY) 
-					newY=boundryY-radius;
+				// Check if ball hit boundary --> start over
+				if(newX - radius < 0) 
+					death();
+				if(newX + radius > boundryX) 
+					death();
+				if(newY - radius < 0) 
+					death();
+				if(newY + radius > boundryY) 
+					newY = boundryY - radius;
+					
+				//check boundaries for each blocker
+				checkCollisions();
+				moveBlocker(blockerArray);
+		        
+		        drawCircle(newX, newY);
 				
 				debug.innerHTML = "x="+Math.round(newX)+" y="+Math.round(newY);
-		        drawCircle(newX, newY);
-		        //context.restore();
+		        
+			}
+			
+			function checkCollisions() {
+				for (var i = 0; i < blockerArray.length; i++) {
+					
+				}
+			}
+			
+			function death() {
+				// Check if ball hit a side or top --> reset and run main()
+				context.clearRect ( 0 , 0 , boundryX , boundryY );
+				context.beginPath();
+				main();
 			}
 			
 			function drawCircle(x, y){
 				context.clearRect ( 0 , 0 , boundryX , boundryY );
 				context.beginPath();
-				//context.moveTo(centerX, centerY);
-				centerX=x;
-				centerY=y;
+				centerX = x;
+				centerY = y;
 		        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
 		        context.fillStyle = "#8ED6FF";
 		        context.fill();
 		        context.lineWidth = 1;
 		        context.strokeStyle = "#0080c9";
 		        context.stroke();
+		        drawBlocker(blockerArray);
+			}
+			
+			function moveBlocker(blockerArray) {
+				for (var i = 0; i < blockerArray.length; i++) {
+					// Update each blocker position
+				}
+				// Check Collisions to see if blockers pushed the ball (blocker boundaries are less than the circlex+radius)
+				checkCollisions();
+			}
+			
+			function drawBlocker(blockerArray) {
+				context.clearRect ( 0 , 0 , boundryX , boundryY );
+				for (var i = 0; i < blockerArray.length; i++) {
+					
+			        context.fillRect(blockerArray[i].x, blockerArray[i].y, 10, 10);
+			        context.fillStyle = "#8ED6FF";
+			        context.fill();
+			        context.lineWidth = 1;
+			        context.strokeStyle = "#0080c9";
+			        context.stroke();
+					
+				}
 			}
 				
 		</script>
