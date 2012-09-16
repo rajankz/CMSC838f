@@ -126,10 +126,22 @@
 			
 			function canMoveBall(x, y) {
 				for (var j = 0; j < blockerArray.length; j++) {
-					if ((y - radius >= blockerArray[j].x) && (y - radius <= (blockerArray[j].x + blockSize))) { crash(); }
-					if ((y + radius >= blockerArray[j].x) && (y + radius <= (blockerArray[j].x + blockSize))) { crash(); }
-					if ((x - radius >= blockerArray[j].y) && (x - radius <= (blockerArray[j].y + blockSize))) { crash(); }
-					if ((x + radius >= blockerArray[j].y) && (x + radius <= (blockerArray[j].y + blockSize))) { crash(); }
+					if ((y - radius <= (blockerArray[j].y + blockSize)) && (y - radius >= blockerArray[j].y)) { 
+						if (((x - radius <= (blockerArray[j].x + blockSize)) && (x - radius >= blockerArray[j].x)) ||
+						   ((x + radius <= (blockerArray[j].x + blockSize)) && (x + radius >= blockerArray[j].x))) { 
+						   	
+						   	crash(); 
+						}
+					}
+					
+					if ((y + radius <= (blockerArray[j].y + blockSize)) && (y + radius >= blockerArray[j].y)) { 
+						
+						if (((x - radius <= (blockerArray[j].x + blockSize)) && (x - radius >= blockerArray[j].x)) || 
+						   ((x + radius <= (blockerArray[j].x + blockSize)) && (x + radius >= blockerArray[j].x))) {
+						   	
+						   crash();
+						}
+					}
 				}
 				
 			}
