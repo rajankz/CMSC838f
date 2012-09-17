@@ -73,6 +73,8 @@
 			function init() {
 				drawCircle(startX, startY);
 				drawBlockers(blockerArray);
+				debug.innerHTML = "Move the ball to the top of the screen. <br />Beware the edges and the blocks! Don't crash into them. <br /><br />" + 
+								  "Lives left: " + livesLeft;
 				if (window.DeviceOrientationEvent) {
 					window.addEventListener('deviceorientation', function(eventData) {
 						var LR = eventData.gamma;
