@@ -28,6 +28,7 @@
         
         <canvas id="canvas" width="350" height="490"></canvas>
         <div id="debug"></div>
+        <div id="debug2"></div>
         
 		<script type="text/javascript">
 			
@@ -49,6 +50,8 @@
 			var blockSize = 20;
 			
 			var livesLeft = 4;
+			tries = 0;
+			var score = 0;
 			
 			var newX=0, newY=0;
 			var moveX = 0, moveY = 0;
@@ -73,7 +76,12 @@
 			function init() {
 				drawCircle(startX, startY);
 				drawBlockers(blockerArray);
-				debug.innerHTML = "Move the ball to the top of the screen. <br />Beware the edges and the blocks! Don't crash into them. <br /><br />" + 
+				debug.innerHTML = "Score: " + score + 
+								  "<br /><br />" +
+								  "Move the ball to the top of the screen." + 
+								  "<br />" + 
+								  "Beware the edges and the blocks! Don't crash into them." + 
+								  "<br /><br />" + 
 								  "Lives left: " + livesLeft;
 				if (window.DeviceOrientationEvent) {
 					window.addEventListener('deviceorientation', function(eventData) {
@@ -110,8 +118,11 @@
 				
 				// Check if ball hit boundary --> start over
 				if(newX - radius < 0) crash();
-				if(newX + radius > boundaryX)crash();
-				if(newY - radius < 0) crash();
+				if(newX + radius > boundaryX) crash();
+				if(newY - radius < 0) {
+					tries = 0;
+					newGame();
+				}
 				if(newY + radius > boundaryY) newY = boundaryY - radius;
 					
 				//check boundaries for each blocker
@@ -123,13 +134,28 @@
 			function crash(){
 				livesLeft--;
 				if (livesLeft < 1) {
-					debug.innerHtml = "Woops! You died. Game OVER." +
-									  "<br /><br />" +
-									  "...Starting over.";
 					livesLeft = 4;
+					tries++
+					score = score - 20;
+					if (score < 0) { score = 0; }
+					
+					debug.innerHTML = "Score: " + score + 
+									  "<br /><br />" +
+									  "Woops! You died. Game OVER." +
+									  "<br /><br />" +
+									  "...Starting over." + 
+									  "<br /><br />" + 
+									  "Lives Left: " + livesLeft;
+					
+					debug2.innerHTML = "You've failed at this game " + 
+									   "<br />" + tries + " times in a row.";
 				}
 				else {
-					debug.innerHTML = "Woops! You died." +
+					score = score - 10;
+					if (score < 0) { score = 0; }
+					debug.innerHTML = "Score: " + score + 
+									  "<br /><br />" +
+									  "Woops! You died." +
 									  "<br /><br />" + 
 									  "Lives left: " + livesLeft;
 				}
@@ -140,6 +166,25 @@
 				
 				//context.beginPath();
 				redrawCanvas();
+			}
+			
+			function newGame() {
+				newX = startX;
+				newY = startY;
+				livesLeft = 4;
+				tries = 0;
+				score = score + 30
+				debug.innerHTML = "You've won!" +
+								  "<br /><br />" + 
+								  "Have some points" + 
+								  "<br /><br />" + 
+								  "Score: " + score +
+								  "<br /><br />" +
+								  "Lives left " + livesLeft;
+								  
+				debug2.innerHTML = "You've failed at this game " + 
+									   "<br />" + tries + " times in a row.";
+				
 			}
 			
 			function canMoveBall(x, y) {
