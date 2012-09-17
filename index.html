@@ -16,8 +16,7 @@
 			
 			#canvas {
 				border: 1px solid #333;
-				/*width: 90%;
-				height: 90%;*/
+				background-color: #D3F0DF;
 				margin: auto;
 				float: left;
 			}
@@ -49,6 +48,8 @@
 
 			var blockSize = 20;
 			
+			var livesLeft = 4;
+			
 			var newX=0, newY=0;
 			var moveX = 0, moveY = 0;
 			
@@ -61,7 +62,13 @@
 			{"x":0, "y":150, "dir":1}, 
 			{"x":(blockSize * 4), "y":150, "dir":1}, 
 			{"x":(boundaryX - blockSize), "y":200, "dir":-1},
-			{"x":(boundaryX - (blockSize * 5)), "y":200, "dir":-1}];
+			{"x":(boundaryX - (blockSize * 5)), "y":200, "dir":-1},
+			{"x":0, "y":250, "dir":1},
+			{"x":(blockSize * 4), "y":250, "dir":1}, 
+			{"x":(boundaryX - blockSize), "y":300, "dir":-1}, 
+			{"x":(boundaryX - (blockSize * 5)), "y":300, "dir":-1}, 
+			{"x":0, "y":350, "dir":1}, 
+			{"x":(blockSize * 4), "y":350, "dir":1}];
 			
 			function init() {
 				drawCircle(startX, startY);
@@ -109,12 +116,21 @@
 				canMoveBall(newX, newY);
 				
 				redrawCanvas();
-				debug.innerHTML = "got past redraw";
-		        
 			}
 			
 			function crash(){
-				debug.innerHTML = "death";
+				livesLeft--;
+				if (livesLeft == 0) {
+					debug.innerHtml = "Woops! You died. Game OVER." +
+									  "<br /><br />" +
+									  "...Starting over.";
+					//livesLeft = 4;
+				}
+				else {
+					debug.innerHTML = "Woops! You died." +
+									  "<br /><br />" + 
+									  "Lives left: " + livesLeft;
+				}
 				
 				// Check if ball hit a side or top --> reset and run main()
 				newX = startX;
