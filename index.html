@@ -120,11 +120,11 @@
 			
 			function crash(){
 				livesLeft--;
-				if (livesLeft == 0) {
+				if (livesLeft < 1) {
 					debug.innerHtml = "Woops! You died. Game OVER." +
 									  "<br /><br />" +
 									  "...Starting over.";
-					//livesLeft = 4;
+					livesLeft = 4;
 				}
 				else {
 					debug.innerHTML = "Woops! You died." +
