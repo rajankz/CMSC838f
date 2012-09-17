@@ -83,6 +83,9 @@
 								  "Beware the edges and the blocks! Don't crash into them." + 
 								  "<br /><br />" + 
 								  "Lives left: " + livesLeft;
+				
+				// This device orientation comes from the following link
+				// http://www.html5rocks.com/en/tutorials/device/orientation/
 				if (window.DeviceOrientationEvent) {
 					window.addEventListener('deviceorientation', function(eventData) {
 						var LR = eventData.gamma;
